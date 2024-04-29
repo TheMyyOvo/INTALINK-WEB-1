@@ -67,7 +67,7 @@
         />
         <div class="empty" v-else>
           <el-empty :image-size="200" :image="emptyImage" style="margin-top: 20vh"
-                    :description="$t('PublicVariable.No_data_available')"/>
+                    :description="global.t('PublicVariable.No_data_available')"/>
           <!--          <el-empty :image-size="200" :image="require('@/assets/images/empty.png')" style="margin-top: 20vh"/>-->
           <p class="empty-text">
             {{ $t('dataRelationalApp.dataRelational_tip') }}。</p>
@@ -235,7 +235,7 @@ function queryList() {
     console.log(treeSelectArr.value, 'treeSelectArr.value')
     initTableData();
   } else {
-    proxy.$message.warning('请选择数据项!');
+    proxy.$message.warning($t('columnManagement.Data_Item_Select_Tip'));
   }
 };
 

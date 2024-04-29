@@ -130,10 +130,10 @@ import {
 // 使用 inject 获取 DataNexus 提供的方法
 const router = useRouter();
 const dataNexus = inject('dataNexus');
-const sourseTotal = ref('123')
-const systemTotal = ref('30')
-const modelTotal = ref('78')
-const tableTotal = ref('165')
+const sourseTotal = ref('')
+const systemTotal = ref('')
+const modelTotal = ref('')
+const tableTotal = ref('')
 const fullHeight = ref(document.documentElement.clientHeight - 105)
 const fullHeight1 = ref(document.documentElement.clientHeight - 310)
 

@@ -63,7 +63,8 @@ export default {
     Model_Description: "模型描述",
     table_Number: "数据表数",
     operation: "操作",
-    Model_Name_Tip: "请输入模型名称"
+    Model_Name_Tip: "请输入模型名称",
+    Model_import:"模型导入",
   },
   tableManagement: {
     Belonging_model: "所属模型",
@@ -74,6 +75,7 @@ export default {
     operation: "操作",
     Belonging_model_Tip: "请选择所属数据模型",
     Data_Table_Name_Tip: "请输入数据表名称"
+
   },
   columnManagement: {
     Belonging_model: "所属模型",
@@ -87,7 +89,7 @@ export default {
     Belonging_model_Tip: "请选择所属数据模型",
     Data_table_Tip: "请选择所属数据表",
     Data_Item_Name_Tip: "请输入数据项名称",
-    Data_Item_Select_Tip: "请选择数据项",
+    Data_Item_Select_Tip: "请选择数据项！",
     Data_Item_Selected_Tip: "已选择数据项：",
   },
   systemManagement: {
@@ -102,6 +104,7 @@ export default {
     System_coding_Tip: "请输入系统编码",
     Select_source_Tip: "请选择关联数据源",
     Select_model_Tip: "请选择关联数据模型",
+    Not_currently_bound:"暂不绑定",
   },
   userManage: {
     Department_Name: "部门名称",
@@ -159,6 +162,7 @@ export default {
     Length_control: "长度在6到20个字符",
     Confirm_password_cannot_empty: "确认密码不能为空",
     Phone_number_cannot_empty: "手机号码不能为空",
+    Save_successful:"保存成功",
   },
   roleManage: {
     Role_Name: "角色名称",
@@ -455,6 +459,7 @@ export default {
     caChe: "缓存",
     dont_cache: "不缓存",
     whether_cacheL: "是否缓存",
+    modify:"修改",
 
   },
   PublicVariable: {
@@ -487,6 +492,16 @@ export default {
     selectDataError: "请选择要生成的数据",
     chooseUserError: "请选择要分配的用户",
     No_data_available: "暂无数据",
+    Impor_PDM:"导入PDM",
+    Already_bound:"已绑定了数据表，是否确认删除",
+    Bind_data_items:"已绑定了数据项，是否确认删除",
+    Data_Table_Import:"数据表导入",
+    Select_Model:"请选择所属模型",
+    Data_Item_Import_Template:"数据项导入模板",
+    Data_Item_Import:"数据项导入",
+    Import_Results:"导入结果",
+    Data_import_template:"数据模型导入模板",
+
   },
   dictData: {
     Dictionary_Name: "字典名称",
@@ -531,6 +546,12 @@ export default {
     Associated_data_table: "关联数据表",
     Associated_data_item: "关联数据项",
     incomplete_fields_tip: "有未选择的数据字段，请检查并填写完整后再试",
+    Refresh_Page:"刷新页面",
+    Close_current:"关闭当前",
+    Close_Other:"关闭其他",
+    Close_left_side:"关闭左侧",
+    Close_right_side:'关闭右侧',
+    close_all:"全部关闭",
   },
   scoreMethodManage: {
     methodName: "方法名称"
@@ -544,5 +565,25 @@ export default {
   },
   dataRelationalApp: {
     dataRelational_tip: "在左侧的树状结构中勾选您希望查询的数据项。选择完毕后，点击“查询”按钮，即可在此显示您的查询结果表格",
-  }
+  },
+  requsetManage:{
+    Duplicate_submission_restriction:"请求数据大小超出允许的5M限制，无法进行防重复提交验证。",
+    Repeated_submission:"数据正在处理，请勿重复提交",
+    Login_status_expired:"登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示",
+    Login_again:"重新登录",
+    Invalid_session:"无效的会话，或者会话已过期，请重新登录。",
+    Backend_interface_exception:"后端接口连接异常",
+    Interface_request_timeout:"系统接口请求超时",
+    system_interface:"系统接口",
+    System_abnormality:"异常",
+    Downloading_data:"正在下载数据，请稍候",
+    Error_downloading_file:"下载文件出现错误，请联系管理员！",
+  },
+  exportDefault:{
+    Authentication_failed:"认证失败，无法访问系统资源",
+    No_permission:"当前操作没有权限",
+    Access_does_not_exist:"访问资源不存在",
+    Unknown_system_error:"系统未知错误，请反馈给管理员",
+  },
+
 }

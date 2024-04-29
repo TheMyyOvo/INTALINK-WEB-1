@@ -1,11 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="所属模型" prop="dataModelId">
+      <el-form-item :label="$t('columnManagement.Belonging_model')" prop="dataModelId">
         <el-select
             v-model="queryParams.dataModelId"
-            placeholder="请选择所属模型"
-            :teleported="false"
+            :placeholder="$t('columnManagement.Belonging_model_Tip')"
             @change="handleModelValueChange"
             clearable
         >
@@ -17,10 +16,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="所属数据表" prop="dataTableId">
+      <el-form-item :label="$t('columnManagement.Data_table')" prop="dataTableId">
         <el-select
             v-model="queryParams.dataTableId"
-            placeholder="请选择所属数据表"
+            :placeholder="$t('columnManagement.Data_table_Tip')"
             @change="handleTableValueChange"
             clearable
             :teleported="false"
@@ -33,10 +32,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据项名称" prop="dataColumnName">
+      <el-form-item :label="$t('columnManagement.Data_Item_Name')" prop="dataColumnName">
         <el-input
             v-model="queryParams.dataColumnName"
-            placeholder="请输入数据项名称"
+            :placeholder="$t('columnManagement.Data_Item_Name_Tip')"
             clearable
             style="width: 200px"
             @keyup.enter="handleQuery"
@@ -44,7 +43,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="Search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
@@ -54,8 +53,8 @@
             plain
             icon="Plus"
             @click="handleAdd"
-        >新增
-        </el-button>
+            v-hasPermi="['dataConfiguration:dataColumn:add']"
+        >{{ $t('btn.add') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -64,8 +63,8 @@
             icon="Delete"
             :disabled="multiple"
             @click="handleDelete"
-        >批量删除
-        </el-button>
+            v-hasPermi="['dataConfiguration:dataColumn:remove']"
+        >{{ $t('btn.batchDelete') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -73,50 +72,50 @@
             plain
             icon="Upload"
             @click="handleImport"
-        >导入
-        </el-button>
+            v-hasPermi="['dataConfiguration:dataColumn:import']"
+        >{{ $t('btn.import') }}</el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="数据项名称" align="center" prop="dataColumnName">
+      <el-table-column :label="$t('columnManagement.Data_Item_Name')" align="left" prop="dataColumnName">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.dataColumnName"></el-input>
           <span v-else>{{ row.dataColumnName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据项编码" align="center" prop="dataColumnCode">
+      <el-table-column :label="$t('columnManagement.Data_item_encoding')" align="left" prop="dataColumnCode">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.dataColumnCode"></el-input>
           <span v-else>{{ row.dataColumnCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据项描述" align="center" prop="dataColumnRemark">
+      <el-table-column :label="$t('columnManagement.Data_Item_Description')" align="left" prop="dataColumnRemark">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.dataColumnRemark"></el-input>
           <span v-else>{{ row.dataColumnRemark }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据模型名称" align="center" prop="dataModelName">
+      <el-table-column :label="$t('columnManagement.Data_Model_Name')" align="left" prop="dataModelName">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.dataModelName"></el-input>
           <span v-else>{{ row.dataModelName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据表名称" align="center" prop="dataTableName">
+      <el-table-column :label="$t('columnManagement.Data_Table_Name')" align="left" prop="dataTableName">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.dataTableName"></el-input>
           <span v-else>{{ row.dataTableName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('columnManagement.operation')" width="180" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button v-if="!scope.row.status" link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-          >修改
+                     v-hasPermi="['dataConfiguration:dataColumn:edit']">{{ $t('btn.edit') }}
           </el-button>
           <el-button v-else link type="primary" icon="Edit" @click="handleSaveUpdate(scope.row)"
-          >保存
+                     v-hasPermi="['dataConfiguration:dataColumn:save']">{{ $t('btn.save') }}
           </el-button>
         </template>
       </el-table-column>
@@ -146,20 +145,20 @@
         <el-icon class="el-icon--upload">
           <upload-filled/>
         </el-icon>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__text">{{ $t('PublicVariable.Drag_files_tip') }}<em>{{ $t('btn.Click_to_upload') }}</em></div>
         <template #tip>
           <div class="el-upload__tip text-center">
-            <span>仅允许导入xls、xlsx格式文件。</span>
+            <span>{{ $t('PublicVariable.importing_xls_tip') }}。</span>
             <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;"
-                     @click="importTemplate">下载模板
+                     @click="importTemplate">{{ $t('btn.Download_template') }}
             </el-link>
           </div>
         </template>
       </el-upload>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitFileForm">确 定</el-button>
-          <el-button @click="upload.open = false">取 消</el-button>
+          <el-button type="primary" @click="submitFileForm">{{ $t('btn.confirm') }}</el-button>
+          <el-button @click="upload.open = false">{{ $t('btn.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -167,20 +166,12 @@
   </div>
 </template>
 
-<script setup>
-import {inject, reactive, onMounted} from 'vue';
-import {
-  dataColumnList,
-  deleteDataColumn,
-  insertDataColumnList,
-  dataModelSelectAll,
-  selectAllByModelId
-} from "@/api/configuration/configuration.js";
-
-const {proxy} = getCurrentInstance();
+<script  setup>
+import { inject, reactive, onMounted } from 'vue';
+import {dataColumnList, deleteDataColumn, insertDataColumnList,dataModelSelectAll,selectAllByModelId} from "@/api/configuration/configuration.js";
+const { proxy } = getCurrentInstance();
 import {getToken} from "@/utils/auth.js";
-import {ElMessage} from "element-plus";
-
+import i18n from "../../lang/index.js";
 const route = useRoute();
 const router = useRouter();
 // 使用 inject 获取 DataNexus 提供的方法
@@ -219,7 +210,7 @@ const upload = reactive({
   // 设置上传的请求头部
   headers: {Authorization: "Bearer " + getToken()},
   // 上传的地址
-  url: import.meta.env.VITE_APP_BASE_API + "/dataColumn/columnImport"
+  url: import.meta.env.VITE_APP_BASE_API + "/configoperations/dataColumn/columnImport"
 });
 onMounted(() => {
   getList();
@@ -247,7 +238,7 @@ const onSubmit = () => {
 };
 
 const handleModelValueChange = (newValue) => {
-  if (newValue) {
+  if(newValue){
     ModelIdSelectAll(newValue)
   }
 
@@ -258,7 +249,9 @@ const handleTableValueChange = (newValue) => {
 };
 
 const handleDataColumnChange = (newValue) => {
+  console.log(newValue, "newValue")
   dataNexus.updateSharedData('dataColumnChildren', 'dataColumnName', newValue);
+  // dataNexus.sharedData.myPlugin.doSomething();
 };
 
 
@@ -335,18 +328,17 @@ function handleSaveUpdate(row) {
   insertDataColumnList(row).then(response => {
     row.status = false
     getList();
-    proxy.$modal.msgSuccess("保存成功");
   });
 }
 
 /** 删除按钮操作 */
 function handleDelete(row) {
   const id = ids.value;
-  proxy.$modal.confirm('是否确认删除？').then(function () {
+  proxy.$modal.confirm(i18n.global.t('PublicVariable.Delete_operation_tip')).then(function () {
     return deleteDataColumn(id);
   }).then(() => {
     getList();
-    proxy.$modal.msgSuccess("删除成功");
+    proxy.$modal.msgSuccess(i18n.global.t('PublicVariable.Delete_successful_tip'));
   }).catch(() => {
   });
 }
@@ -355,21 +347,21 @@ function handleDelete(row) {
 /** 导入按钮操作 */
 function handleImport() {
   if (!queryParams.dataModelId) {
-    proxy.$modal.msgError("请先选择所属模型");
+    proxy.$modal.msgError(i18n.global.t('PublicVariable.Select_Model'));
     return
   }
   if (!queryParams.dataTableId) {
-    proxy.$modal.msgError("请先选择所属数据表");
+    proxy.$modal.msgError(i18n.global.t('columnManagement.Data_table_Tip'));
     return;
   }
-  upload.title = "数据项导入";
+  upload.title = i18n.global.t('PublicVariable.Data_Item_Import');
   upload.open = true;
 
 };
 
 /** 下载模板操作 */
 function importTemplate() {
-  proxy.download("/dataColumn/importTemplate", {}, `数据项导入模板.xlsx`);
+  proxy.download("configoperations/dataColumn/importTemplate", {}, i18n.global.t('PublicVariable.Data_Item_Import_Template')`.xlsx`);
 };
 /**文件上传中处理 */
 const handleFileUploadProgress = (event, file, fileList) => {
@@ -380,7 +372,7 @@ const handleFileSuccess = (response, file, fileList) => {
   upload.open = false;
   upload.isUploading = false;
   proxy.$refs["uploadRef"].handleRemove(file);
-  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", {dangerouslyUseHTMLString: true});
+  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", i18n.global.t('PublicVariable.Import_Results'), {dangerouslyUseHTMLString: true});
   getList();
 };
 
@@ -405,6 +397,7 @@ function ModelIdSelectAll(ModelId) {
 
   });
 }
+
 </script>
 
 <style>

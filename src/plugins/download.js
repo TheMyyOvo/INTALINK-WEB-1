@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { blobValidate } from '@/utils/ruoyi'
+import i18n from "../lang/index.js";
 
 const baseURL = import.meta.env.VITE_APP_BASE_API
 let downloadLoadingInstance;
@@ -11,7 +12,7 @@ let downloadLoadingInstance;
 export default {
   zip(url, name) {
     var url = baseURL + url
-    downloadLoadingInstance = ElLoading.service({ text: "正在下载数据，请稍候", background: "rgba(0, 0, 0, 0.7)", })
+    downloadLoadingInstance = ElLoading.service({ text: i18n.global.t('common.download_data'), background: "rgba(0, 0, 0, 0.7)", })
     axios({
       method: 'get',
       url: url,
@@ -28,7 +29,7 @@ export default {
       downloadLoadingInstance.close();
     }).catch((r) => {
       console.error(r)
-      ElMessage.error('下载文件出现错误，请联系管理员！')
+      ElMessage.error(i18n.global.t('common.download_error'))
       downloadLoadingInstance.close();
     })
   },

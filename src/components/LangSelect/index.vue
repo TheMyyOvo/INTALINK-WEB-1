@@ -20,6 +20,8 @@
 
 <script>
 import useAppStore from "@/store/modules/app.js";
+import Cookies from 'js-cookie'
+
 
 export default {
   computed: {
@@ -31,7 +33,7 @@ export default {
     handleSetLanguage(value) {
       // debugger
       this.$i18n.locale = value
-      // this.$store.dispatch('app/setLanguage', value)
+      Cookies.set('language', value)
       useAppStore().setLanguage(value)
       this.$message({message: this.$t('btn.Language_set_successfully'), type: 'success'})
     }

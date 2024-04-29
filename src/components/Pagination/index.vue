@@ -1,8 +1,9 @@
 <template>
   <div :class="{ 'hidden': hidden }" class="pagination-container">
     <!--  :background="background"  -->
+    <el-config-provider :locale="locale">
     <el-pagination
-        v-model:current-page="currentPage"
+        v-model:current-page=currentPage
         v-model:page-size="pageSize"
         :layout="layout"
         :page-sizes="pageSizes"
@@ -11,11 +12,16 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
     />
+    </el-config-provider>
   </div>
 </template>
 
 <script setup>
 import {scrollTo} from '@/utils/scroll-to'
+// import language from '/src/store/modules/app.js'
+import useAppStore from "@/store/modules/app.js";
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import en from 'element-plus/dist/locale/en.mjs'
 
 const props = defineProps({
   total: {
@@ -36,7 +42,6 @@ const props = defineProps({
       return [10, 20, 30, 50]
     }
   },
-  // 移动端页码按钮的数量端默认值5
   pagerCount: {
     type: Number,
     default: document.body.clientWidth < 992 ? 5 : 7
@@ -76,6 +81,11 @@ const pageSize = computed({
     emit('update:limit', val)
   }
 })
+const languages = computed(() => useAppStore().language)
+const locale = computed(() => (languages.value === 'zh_CN' ? zhCn : en))
+
+
+
 
 function handleSizeChange(val) {
   if (currentPage.value * val > props.total) {

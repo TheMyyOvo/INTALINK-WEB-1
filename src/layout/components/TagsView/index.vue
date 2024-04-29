@@ -21,27 +21,27 @@
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">
         <refresh-right style="width: 1em; height: 1em;"/>
-        刷新页面
+        {{$t('DataRelationEntry.Refresh_Page')}}
       </li>
       <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">
         <close style="width: 1em; height: 1em;"/>
-        关闭当前
+        {{ $t('DataRelationEntry.Close_current') }}
       </li>
       <li @click="closeOthersTags">
         <circle-close style="width: 1em; height: 1em;"/>
-        关闭其他
+        {{ $t('DataRelationEntry.Close_Other') }}
       </li>
       <li v-if="!isFirstView()" @click="closeLeftTags">
         <back style="width: 1em; height: 1em;"/>
-        关闭左侧
+        {{ $t('DataRelationEntry.Close_left_side') }}
       </li>
       <li v-if="!isLastView()" @click="closeRightTags">
         <right style="width: 1em; height: 1em;"/>
-        关闭右侧
+        {{ $t('DataRelationEntry.Close_right_side') }}
       </li>
       <li @click="closeAllTags(selectedTag)">
         <circle-close style="width: 1em; height: 1em;"/>
-        全部关闭
+        {{ $t('DataRelationEntry.close_all') }}
       </li>
     </ul>
   </div>

@@ -14,6 +14,7 @@ const messages = {
     ...zhLocale,
     ...elementZhLocale
   }
+
 }
 
 const i18n = createI18n({

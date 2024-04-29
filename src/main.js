@@ -78,6 +78,7 @@ app.use(store)
 app.use(plugins)
 app.use(elementIcons)
 app.use(i18n)
+app.use(ElementPlus,{locale})
 
 app.component('svg-icon', SvgIcon)
 
@@ -91,3 +92,4 @@ app.use(ElementPlus, {
 })
 
 app.mount('#app')
+

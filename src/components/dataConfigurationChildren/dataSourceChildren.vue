@@ -1,10 +1,11 @@
 <template>
+
   <div class="app-container data-source-children">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="数据库名称" prop="dataSourceName">
+      <el-form-item :label="$t('sourceManagement.Database_name')" prop="dataSourceName">
         <el-input
             v-model="queryParams.dataSourceName"
-            placeholder="请输入数据库名称"
+            :placeholder="$t('sourceManagement.Database_Name_Tip')"
             clearable
             style="width: 200px"
             @keyup.enter="handleQuery"
@@ -12,7 +13,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="Search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
@@ -22,7 +23,8 @@
             plain
             icon="Plus"
             @click="handleAdd"
-        >新增
+            v-hasPermi="['dataConfiguration:dataSource:add']"
+        >{{ $t('btn.add') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -32,59 +34,60 @@
             icon="Delete"
             :disabled="multiple"
             @click="handleDelete"
-        >批量删除
+            v-hasPermi="['dataConfiguration:dataSource:remove']"
+        >{{ $t('btn.batchDelete') }}
         </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="数据库名称" align="center" prop="dataSourceName" show-overflow-tooltip>
+      <el-table-column :label="$t('sourceManagement.Database_name')" align="left" prop="dataSourceName" show-overflow-tooltip>
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.dataSourceName"></el-input>
           <span v-else>{{ row.dataSourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据库类型" align="center" prop="databaseType">
+      <el-table-column :label="$t('sourceManagement.Database_type')" align="center" prop="databaseType">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.databaseType"></el-input>
           <span v-else>{{ row.databaseType }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据库URL" align="center" prop="url" show-overflow-tooltip>
+      <el-table-column :label="$t('sourceManagement.Database_URL')" align="center" prop="url" show-overflow-tooltip>
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.url"></el-input>
           <span v-else>{{ row.url }}
           </span>
-          <!--          <el-tooltip>{{ row.url }}</el-tooltip>-->
+<!--          <el-tooltip>{{ row.url }}</el-tooltip>-->
         </template>
       </el-table-column>
-      <el-table-column label="用户名" align="center" prop="userName">
+      <el-table-column :label="$t('sourceManagement.user_name')" align="left" prop="userName">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.userName"></el-input>
           <span v-else>{{ row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="密码" align="center" prop="password">
+      <el-table-column :label="$t('sourceManagement.password')" align="center" prop="password">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.password"></el-input>
           <span v-else>
             <span v-if="row.isShow" style="display:inline-block;width: 80px">{{ row.password }}</span>
             <span v-else style="display:inline-block;width: 80px">******</span>
             <span @click="changeShow(row)">
-              <el-icon v-if="row.isShow" style="cursor: pointer"><View/></el-icon>
-              <el-icon v-else style="cursor: pointer"><Hide/></el-icon>
+              <el-icon v-if="row.isShow"><View /></el-icon>
+              <el-icon v-else><Hide /></el-icon>
             </span>
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('sourceManagement.operation')" width="180" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button v-if="!scope.row.status" link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-          >修改
+                     v-hasPermi="['dataConfiguration:dataSource:edit']">{{ $t('btn.edit') }}
           </el-button>
           <el-button v-else link type="primary" icon="Edit" @click="handleSaveUpdate(scope.row)"
-          >保存
+                     v-hasPermi="['dataConfiguration:dataSource:save']">{{ $t('btn.save') }}
           </el-button>
         </template>
       </el-table-column>
@@ -96,15 +99,12 @@
         v-model:limit="queryParams.pageSize"
         @pagination="getList"
     />
-
-
   </div>
 </template>
 
 <script setup>
 import {inject, reactive, onMounted} from 'vue';
 import {deleteSourceBasic, insertSourceBasicList, listSource} from "@/api/configuration/configuration";
-import {ElMessage} from "element-plus";
 
 const {proxy} = getCurrentInstance();
 // 使用 inject 获取 DataNexus 提供的方法
@@ -141,6 +141,7 @@ const handleDataSourceNameChange = (newValue) => {
 };
 
 
+
 function dataSourceNameDataUpdated(newValue) {
   queryParams.dataSourceName = newValue;
 }
@@ -152,6 +153,7 @@ function dataListUpdated(newValue) {
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.pageNum = 1;
+  // console.log(queryParams,'---')
   getList();
 }
 
@@ -162,11 +164,13 @@ function getList() {
     dataList.value = response.rows;
     total.value = response.total;
     loading.value = false;
+    // console.log(dataList.value,"dataList.value")
 
     dataList.value.forEach(item => {
       Reflect.set(item, 'status', false);
       Reflect.set(item, 'isShow', false);
     })
+    // console.log(dataList.value,"dataList.value2")
   });
 
 
@@ -191,7 +195,7 @@ function handleAdd() {
     userName: '',
     password: '',
     status: true,
-    isShow: true
+    isShow:true
   }
   dataList.value.unshift(lineData)
 }
@@ -206,28 +210,25 @@ function cancel() {
 function handleUpdate(row) {
   row.status = true
 }
-
-function changeShow(row) {
-  row.isShow = !row.isShow
+function changeShow(row){
+  row.isShow=!row.isShow
 }
-
 /** 保存按钮操作 */
 function handleSaveUpdate(row) {
   insertSourceBasicList(row).then(response => {
     row.status = false
     getList();
-    proxy.$modal.msgSuccess("保存成功");
   });
 }
 
 /** 删除按钮操作 */
 function handleDelete(row) {
   const id = ids.value;
-  proxy.$modal.confirm('是否确认删除？').then(function () {
+  proxy.$modal.confirm(proxy.$t('PublicVariable.Delete_operation_tip')).then(function () {
     return deleteSourceBasic(id);
   }).then(() => {
     getList();
-    proxy.$modal.msgSuccess("删除成功");
+    proxy.$modal.msgSuccess(proxy.$t('PublicVariable.Delete_successful_tip'));
   }).catch(() => {
   });
 }

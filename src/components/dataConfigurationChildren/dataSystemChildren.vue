@@ -1,20 +1,20 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="系统名称" prop="systemName">
+      <el-form-item :label="$t('systemManagement.System_Name')" prop="systemName">
         <el-input
             v-model="queryParams.systemName"
-            placeholder="请输入系统名称"
+            :placeholder="$t('systemManagement.System_Name_Tip')"
             clearable
             style="width: 200px"
             @keyup.enter="handleQuery"
             @change="handleDataSystemChange"
         />
       </el-form-item>
-      <el-form-item label="系统编码" prop="systemCode">
+      <el-form-item :label="$t('systemManagement.System_coding')" prop="systemCode" >
         <el-input
             v-model="queryParams.systemCode"
-            placeholder="请输入系统名称"
+            :placeholder="$t('systemManagement.System_coding_Tip')"
             clearable
             style="width: 200px"
             @keyup.enter="handleQuery"
@@ -22,7 +22,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="Search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
@@ -32,7 +32,8 @@
             plain
             icon="Plus"
             @click="handleAdd"
-        >新增
+            v-hasPermi="['dataConfiguration:dataSystem:add']"
+        >{{ $t('btn.add') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,38 +43,39 @@
             icon="Delete"
             :disabled="multiple"
             @click="handleDelete"
-        >批量删除
+            v-hasPermi="['dataConfiguration:dataSystem:remove']"
+        >{{ $t('btn.batchDelete') }}
         </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="系统名称" align="center" prop="systemName" show-overflow-tooltip>
+      <el-table-column :label="$t('systemManagement.System_Name')" align="left" prop="systemName" show-overflow-tooltip>
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.systemName"></el-input>
           <span v-else>{{ row.systemName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="系统编码" align="center" prop="systemCode">
+      <el-table-column :label="$t('systemManagement.System_coding')" align="left" prop="systemCode">
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.systemCode"></el-input>
           <span v-else>{{ row.systemCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="系统描述" align="center" prop="systemRemark" show-overflow-tooltip>
+      <el-table-column :label="$t('systemManagement.System_Description')" align="left" prop="systemRemark" show-overflow-tooltip>
         <template #default="{row}">
           <el-input v-if="row.status" v-model="row.systemRemark"></el-input>
           <span v-else>{{ row.systemRemark }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="creatTime">
+      <el-table-column :label="$t('systemManagement.Creation_time')" align="center" prop="creatTime">
         <template #default="{row}">
-          <!--          <el-input v-if="row.status" v-model="row.creatTime"></el-input>-->
+<!--          <el-input v-if="row.status" v-model="row.creatTime"></el-input>-->
           <span>{{ row.creatTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="关联数据源" align="center" prop="dataSourceId">
+      <el-table-column :label="$t('systemManagement.Associate_data_sources')" align="center" prop="dataSourceId">
         <template #default="{row}">
           <el-select
               v-model="row.dataSourceId"
@@ -91,7 +93,7 @@
           <span v-else>{{ row.dataSourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="关联数据模型" align="center" prop="dataModelId">
+      <el-table-column :label="$t('systemManagement.Associated_data_model')" align="center" prop="dataModelId">
         <template #default="{row}">
           <el-select
               v-model="row.dataModelId"
@@ -109,13 +111,13 @@
           <span v-else>{{ row.dataModelName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('systemManagement.operation')" width="180" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button v-if="!scope.row.status" link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-          >修改
+                     v-hasPermi="['dataConfiguration:dataSystem:edit']">{{ $t('btn.edit') }}
           </el-button>
           <el-button v-else link type="primary" icon="Edit" @click="handleSaveUpdate(scope.row)"
-          >保存
+                     v-hasPermi="['dataConfiguration:dataSystem:save']">{{ $t('btn.save') }}
           </el-button>
         </template>
       </el-table-column>
@@ -132,18 +134,10 @@
   </div>
 </template>
 
-<script setup>
-import {inject, reactive, onMounted} from 'vue';
-import {
-  insertSystemBasicList,
-  systemBasicList,
-  deleteSystemBasic,
-  dataModelSelectAll,
-  dataSourceBasicSelectAll
-} from "@/api/configuration/configuration.js";
-import {ElMessage} from "element-plus";
-
-const {proxy} = getCurrentInstance();
+<script  setup>
+import { inject, reactive, onMounted } from 'vue';
+import {insertSystemBasicList, systemBasicList,deleteSystemBasic,dataModelSelectAll,dataSourceBasicSelectAll} from "@/api/configuration/configuration.js";
+const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 // 使用 inject 获取 DataNexus 提供的方法
@@ -254,29 +248,29 @@ function handleUpdate(row) {
 
 /** 保存按钮操作 */
 function handleSaveUpdate(row) {
+  console.log(row.dataModelId, row.dataSourceId)
   if (row.dataSourceId == null) {
-    proxy.$modal.msgError('请选择关联数据源')
+    proxy.$modal.msgError($t('systemManagement.Select_source_Tip'))
     return
   }
   if (row.dataModelId == null) {
-    proxy.$modal.msgError('请选择关联数据模型')
+    proxy.$modal.msgError($t('systemManagement.Select_model_Tip'))
     return;
   }
   insertSystemBasicList(row).then(response => {
     row.status = false
     getList();
-    proxy.$modal.msgSuccess("保存成功");
   });
 }
 
 /** 删除按钮操作 */
 function handleDelete(row) {
   const id = ids.value;
-  proxy.$modal.confirm('是否确认删除').then(function () {
+  proxy.$modal.confirm(proxy.$t('PublicVariable.Delete_operation_tip')).then(function () {
     return deleteSystemBasic(id);
   }).then(() => {
     getList();
-    proxy.$modal.msgSuccess("删除成功");
+    proxy.$modal.msgSuccess(proxy.$t('PublicVariable.Delete_successful_tip'));
   }).catch(() => {
   });
 }
@@ -286,10 +280,11 @@ async function dataSourceSelectAll() {
   await dataSourceBasicSelectAll().then(response => {
     const notBindSourceData = {
       dataSourceId: 0,
-      dataSourceName: '暂不绑定'
+      dataSourceName: $t('systemManagement.Not_currently_bound')
     }
     dataSourceNameOptions.value = response.data;
     dataSourceNameOptions.value.unshift(notBindSourceData)
+    // console.log(dataSourceNameOptions.value)
   });
 }
 
@@ -298,10 +293,11 @@ function ModelSelectAll() {
   dataModelSelectAll().then(response => {
     const notBindModelData = {
       dataModelId: 0,
-      dataModelName: '暂不绑定'
+      dataModelName: $t('systemManagement.Not_currently_bound')
     }
     dataModelNameOptions.value = response.data;
     dataModelNameOptions.value.unshift(notBindModelData)
+    // console.log(optionsModel.value)
   });
 }
 </script>

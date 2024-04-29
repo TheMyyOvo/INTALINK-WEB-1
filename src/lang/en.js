@@ -133,6 +133,7 @@ export default {
     cache: "cache",
     dont_cache: "don't cache",
     whether_cache: "whether cache",
+    modify:"modify",
   },
   PublicVariable: {
     select_tip: "Please select",
@@ -164,6 +165,15 @@ export default {
     selectDataError: "Please select the data to be generated",
     chooseUserError: "Please select the user to be assigned",
     No_data_available: "No data available",
+    Impor_PDM:"Impor PDM",
+    Already_bound:"The data table has been bound. Are you sure you want to delete it",
+    Bind_data_items:"The data item has been bound. Are you sure you want to delete it",
+    Data_Table_Import:"Data Table Import",
+    Select_Model:"Please select the model you belong to first",
+    Data_Item_Import_Template:"Data Item Import Template",
+    Data_Item_Import:"Data Item Import",
+    Import_Results:"Import Results",
+    Data_import_template:"Data model import template",
   },
   homePage: {
     dataDisplayTitle: "Comprehensive data display",
@@ -178,6 +188,7 @@ export default {
     associateSources: "Associate data sources",
     associatedModels: "Associated data models",
     number: 'items'
+
   },
   rules: {
     deptRules: 'The upper department cannot be empty',
@@ -198,7 +209,9 @@ export default {
     Model_Description: "Model Description",
     table_Number: "Number of data tables",
     operation: "operation",
-    Model_Name_Tip: "Please enter the model name"
+    Model_Name_Tip: "Please enter the model name",
+    Model_import:"Model import",
+
   },
   tableManagement: {
     Belonging_model: "Belonging model",
@@ -222,7 +235,7 @@ export default {
     Belonging_model_Tip: "Please select the corresponding data model",
     Data_table_Tip: "Please select the corresponding data table",
     Data_Item_Name_Tip: "Please enter the name of the data item",
-    Data_Item_Select_Tip: "Please select a data item",
+    Data_Item_Select_Tip: "Please select a data item!",
     Data_Item_Selected_Tip: "Selected data item：",
   },
   systemManagement: {
@@ -237,6 +250,7 @@ export default {
     System_coding_Tip: "Please enter the system code",
     Select_source_Tip: "Please select the associated data source",
     Select_model_Tip: "Please select the associated data model",
+    Not_currently_bound:"Not currently bound",
   },
   userManage: {
     Department_Name: "Department Name",
@@ -291,8 +305,8 @@ export default {
     new_password_cannot_empty: "The new password cannot be empty",
     Length_control: "Length between 6 and 20 characters",
     Confirm_password_cannot_empty: "Confirm password cannot be empty",
-    Phone_number_cannot_empty: "Phone number cannot be empty"
-
+    Phone_number_cannot_empty: "Phone number cannot be empty",
+    Save_successful:"Save successful",
   },
   roleManage: {
     Role_Name: "Role Name",
@@ -538,6 +552,12 @@ export default {
     Associated_data_table: "Associated data table",
     Associated_data_item: "Associated data item",
     incomplete_fields_tip: "There are unselected data fields. Please check and complete them before trying again",
+    Refresh_Page:"Refresh Page",
+    Close_current:"Close current",
+    Close_Other:"Close Other",
+    Close_left_side:"Close left side",
+    Close_right_side:"Close right side",
+    close_all:"close all",
   },
   scoreMethodManage: {
     methodName: "methodName"
@@ -551,5 +571,26 @@ export default {
   },
   dataRelationalApp: {
     dataRelational_tip: "Check the data item you want to query in the tree structure on the left. After selecting, click the \"Search\" button to display your query result table here",
-  }
+  },
+  requsetManage:{
+    Duplicate_submission_restriction:"The requested data size exceeds the allowed 5M limit and cannot be verified for duplicate submission.",
+    Repeated_submission:"Data is being processed, please do not resubmit",
+    Login_status_expired:"The login status has expired. You can continue to stay on this page or log in again, as prompted by the system",
+    Login_again:"Login again",
+    Invalid_session:"Invalid session, or session has expired, please log in again.",
+    Backend_interface_exception:"Abnormal backend interface connection",
+    Interface_request_timeout:"System interface request timeout",
+    system_interface:"system interface",
+    System_abnormality:"abnormality",
+    Downloading_data:"Downloading data, please wait",
+    Error_downloading_file:"There was an error downloading the file. Please contact the administrator!",
+  },
+  exportDefault:{
+    Authentication_failed:"Authentication failed, unable to access system resources",
+    No_permission:"The current operation does not have permission",
+    Access_does_not_exist:"Accessing resource does not exist",
+    Unknown_system_error:"Unknown system error, please provide feedback to the administrator",
+
+  },
+
 }
